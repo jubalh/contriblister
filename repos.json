@@ -1,20 +1,6 @@
-{
-	"emails":
-	[
-		"g.bluehut@gmail.com",
-		"michael.vetter@hella-gutmann.com"
-	],
-	"repos":
-	[
-		{
-			"name": "HashTwm",
-			"url": "https://github.com/ZaneA/HashTWM",
-			"vcs": "git"
-		},
-		{
-			"name": "ego",
-			"url": "https://github.com/funtoo/ego",
-			"vcs": "git"
-		}
-	]
-}
+{ "emails": [ "g.bluehut@gmail.com", "michael.vetter@hella-gutmann.com" ],
+	"repos": [ { "name": "HashTwm", "url": "https://github.com/ZaneA/HashTWM",
+		"vcs": "git" }, { "name": "ego", "url":
+		"https://github.com/funtoo/ego", "vcs": "git", "project": "Funtoo" }, {
+		"name": "boot-update", "url": "https://github.com/funtoo/boot-update",
+		"vcs": "git", "project": "Funtoo" } ] }
