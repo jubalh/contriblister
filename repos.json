@@ -1,0 +1,20 @@
+{
+	"emails":
+	[
+		"g.bluehut@gmail.com",
+		"michael.vetter@hella-gutmann.com"
+	],
+	"repos":
+	[
+		{
+			"name": "HashTwm",
+			"url": "https://github.com/ZaneA/HashTWM",
+			"vcs": "git"
+		},
+		{
+			"name": "ego",
+			"url": "https://github.com/funtoo/ego",
+			"vcs": "git"
+		}
+	]
+}
