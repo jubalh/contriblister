@@ -1,14 +1,23 @@
 # contributions lister #
 
-We will need python 2 and:
+***contributions lister*** is a simple cli program to (as the name says) list contributions.
+
+## Requirements ##
+
+- Python 2
+- Further python modules (see requirements.txt)
+
+## Installation ##
+
+Since python 2 is (pre-) installed on any GNU/Linux distribution, the only thing you need to do by yourself (in addition to getting the source) is installing the necessary python modules. This can be done by executing the following command:
 
 ```
-pip install sh
-pip install gitpython
+pip install -r requirements.txt
 ```
+
+*It's generally recommended to use a virtual python environment. See [virtualenv website](https://virtualenv.pypa.io/ "Official virtualenv project website") for further information.*
 
 ## Goal ##
-Started as a simple cli program to list contributions.
 
 Now the goal is to create a python script that will read a json file containing repo urls and emails, and create a simple HTML file with an overview of contributions.
 Then users can easily embed this file in their website.

@@ -1,0 +1,4 @@
+# We haven't tested if older versions of these modules suffice so let us know
+# about your experience ;-)
+sh
+gitpython
