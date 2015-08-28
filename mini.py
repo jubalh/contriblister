@@ -1,55 +1,68 @@
-import os
-import json
-import sh
-import subprocess
+from json import load
+from sh import cd, git
+from string import join, split
+from subprocess import check_output
+from os import mkdir
+from os.path import isdir
+from sys import exit
 
-def get_newest_repos():
-    for repo in data["repos"]:
-        if os.path.isdir(repo["name"]):
-            print("Updating " + repo["name"])
-            sh.cd(startpath + "/" + repo["name"])
-            sh.git("pull")
-            sh.cd(startpath)
-        else:
-            print("Cloning " + repo["name"])
-            sh.git("clone", repo["url"], repo["name"])
-    print ""
+contributions = {}
+unprocessable = []
 
-def search_occurence(buf, searchterm, pos):
-    contributions = 0
-    pos = buf.find(searchterm, pos)
-    if pos >= 0:
-        pos2 = buf.find(" ", pos)
-        if pos2 >= 0:
-            contributions += 1
-            contributions += search_occurence(buf, searchterm, pos2)
-            return contributions
-    return 0
+if not isdir('/tmp/contriblister'):
+    try:
+        mkdir('/tmp/contriblister')
+    except:
+        print('ERROR: Could not create directory in /tmp. Exiting.')
+        exit(1)
 
-def count_contributions():
-    total_contributions = 0
-    for repo in data["repos"]:
-        print "Processing: ", repo["name"]
-        wd = startpath + "/" + repo["name"]
+try:
+    conf = open('repos.json', 'r')
+except:
+    print('ERROR: Could not open configuration file. Exiting.')
+    exit(1)
+else:
+    try:
+        data = load(conf)
+    except:
+        print('ERROR: Could not load data from configuration file. Exiting.')
+        exit(1)
+    else:
+        for repo in data['repos']:
+            repo_name = split(repo['url'], '/')[-1]
 
-        output = subprocess.check_output(['git', 'log', '--pretty=format:"%ae - %s"', "--shortstat"], cwd=wd)
-        output = output.decode("utf-8")
+            if repo['vcs'] not in ['git']:
+                print('ERROR: The VCS (%s) of repository %s is not supportet, yet. Continuing.' % (repo['vcs'], repo_name))
+                unprocessable.append(repo_name)
+                continue
 
-        for ea in data["emails"]:
-            print (" Checking for: " + ea)
-            contributions = search_occurence(output, ea, 0)
-            print (" %d contributions found" %contributions)
-            total_contributions += contributions
-    return total_contributions
+            repo_dir = '/tmp/contriblister/%s' % repo_name
 
+            try:
+                if isdir(repo_dir):
+                    cd(repo_dir)
+                    git('pull')
+                else:
+                    git('clone', repo['url'], repo_dir)
+                    cd(repo_dir)
+            except:
+                print('ERROR: Could not clone/pull repository %s. Continuing.' % repo_name)
+                unprocessable.append(repo_name)
+                continue
 
-with open("repos.json") as data_file:
-    data = json.load(data_file)
+            try:
+                log = check_output(['git', 'log', '--pretty=format:"%ae - %s"', '--shortstat'], cwd=repo_dir).decode('utf-8')
+            except:
+                print('ERROR: Could not fetch log of repository %s. Continuing.' % repo_name)
+                unprocessable.append(repo_name)
+                continue
+            else:
+                contributions[repo_name] = 0
 
-startpath = os.getcwd()
+                for ma in data['mail-addresses']:
+                    contributions[repo_name] += log.count(ma)
 
-get_newest_repos()
-
-contributions = count_contributions()
-
-print "\nTotal contributions: ", contributions
+        print('\n#Commits   Name')
+        for repo in contributions.iterkeys():
+            print('%8d   %s' % (contributions[repo], repo))
+        print('\nUnprocessable repositories: %s' % ', '.join(unprocessable))
