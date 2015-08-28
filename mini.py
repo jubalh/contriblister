@@ -65,4 +65,6 @@ else:
         print('\n#Commits   Name')
         for repo in contributions.iterkeys():
             print('%8d   %s' % (contributions[repo], repo))
-        print('\nUnprocessable repositories: %s' % ', '.join(unprocessable))
+        if len(unprocessable) > 0:
+            print('\nUnprocessable repositories: %s' % ', '.join(unprocessable))
+        print('')
