@@ -51,7 +51,7 @@ else:
                 continue
 
             try:
-                log = check_output(['git', 'log', '--pretty=format:"%ae - %s"', '--shortstat'], cwd=repo_dir).decode('utf-8')
+                log = check_output(['git', 'log', '--pretty=format:"%ae"', '--shortstat'], cwd=repo_dir).decode('utf-8')
             except:
                 print('ERROR: Could not fetch log of repository %s. Continuing.' % repo_name)
                 unprocessable.append(repo_name)
