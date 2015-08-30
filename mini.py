@@ -62,9 +62,22 @@ else:
                 for ma in data['mail-addresses']:
                     contributions[repo_name] += log.count(ma)
 
-        print('\n#Commits   Name')
-        for repo in contributions.iterkeys():
-            print('%8d   %s' % (contributions[repo], repo))
-        if len(unprocessable) > 0:
-            print('\nUnprocessable repositories: %s' % ', '.join(unprocessable))
-        print('')
+        try:
+            html_file = open('/tmp/contriblister/contributions.html', 'w')
+            html_file.truncate()
+        except:
+            print('ERROR: Could not open htlm-file. Skipping.')
+        else:
+            html_file.write('<table><thead><th># Commits</th><th>Name</th></thead><tbody>')
+
+            for repo in contributions.iterkeys():
+                html_file.write('<tr><td>%d</td><td>%s</td></tr>' % (contributions[repo], repo))
+
+            html_file.write('</tbody></table>')
+        finally:
+            print('\n#Commits   Name')
+            for repo in contributions.iterkeys():
+                print('%8d   %s' % (contributions[repo], repo))
+            if len(unprocessable) > 0:
+                print('\nUnprocessable repositories: %s' % ', '.join(unprocessable))
+            print('')
