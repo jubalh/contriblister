@@ -1,6 +1,6 @@
 # contributions lister #
 
-***contributions lister*** is a simple cli program to (as the name says) list contributions.
+***contributions lister*** is a simple cli program to (as the name suggests) list contributions.
 
 ## Requirements ##
 
@@ -17,4 +17,4 @@ pip install -r requirements.txt
 
 Now the goal is to create a python script that will read a json file containing repo urls and emails, and create a simple HTML file with an overview of contributions.
 Then users can easily embed this file in their website.
-It's kind of similar to ohloh/openhub and github resume. But gives the user more control. ohloh doesnt trigger projects regularly and is annoying. github resume only scans projects on github. also the user can decide on the style using templates for the generated HTML file.
+It's kind of similar to ohloh/openhub and github resume. But gives the user more control. ohloh doesnt trigger projects regularly which is annoying. github resume only scans projects on github. also with contriblister the user can decide on the style using templates for the generated HTML file.
