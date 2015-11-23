@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
+
 import os
 import json
 import sh
 import subprocess
+#from collections import namedtuple
+from jinja2 import Environment, FileSystemLoader, Template
+
+#Contribution = namedtuple('Contribution', ['email', 'insertions', 'deletions'])
 
 def get_newest_repos():
     for repo in data["repos"]:
@@ -15,6 +21,7 @@ def get_newest_repos():
         else:
             print("Cloning " + repo["name"])
             sh.git("clone", repo["url"], repo["name"])
+    sh.cd(working_directory)
     print ("")
 
 def search_occurence_in_string(buf, searchterm, pos):
@@ -56,5 +63,15 @@ if not os.path.isdir(repos_path):
 get_newest_repos()
 
 contributions_count = count_overall_contributions()
+
+#jinja_env = Environment(loader = FileSystemLoader(working_directory + '/templates'))
+#template = jinja_env.get_template('t.html')
+template = Template(open(working_directory+'/templates/t.html').read())
+output = template.render(a_var=contributions_count)
+print(output)
+
+output_file = open('output.html','w')
+output_file.write(output)
+output_file.close()
 
 print ("\nTotal contributions: ", contributions_count)
