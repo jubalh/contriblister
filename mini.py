@@ -13,7 +13,7 @@ def get_newest_repos():
         else:
             print("Cloning " + repo["name"])
             sh.git("clone", repo["url"], repo["name"])
-    print ""
+    print ("")
 
 def search_occurence(buf, searchterm, pos):
     contributions = 0
@@ -29,7 +29,7 @@ def search_occurence(buf, searchterm, pos):
 def count_contributions():
     total_contributions = 0
     for repo in data["repos"]:
-        print "Processing: ", repo["name"]
+        print ("Processing: ", repo["name"])
         wd = startpath + "/" + repo["name"]
 
         output = subprocess.check_output(['git', 'log', '--pretty=format:"%ae - %s"', "--shortstat"], cwd=wd)
@@ -52,4 +52,4 @@ get_newest_repos()
 
 contributions = count_contributions()
 
-print "\nTotal contributions: ", contributions
+print ("\nTotal contributions: ", contributions)

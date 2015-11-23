@@ -4,12 +4,8 @@
 
 ## Requirements ##
 
-- Python 2
+- Python 3
 - Further python modules (see requirements.txt)
-
-## Installation ##
-
-Since python 2 is (pre-) installed on any GNU/Linux distribution, the only thing you need to do by yourself (in addition to getting the source) is installing the necessary python modules. This can be done by executing the following command:
 
 ```
 pip install -r requirements.txt
