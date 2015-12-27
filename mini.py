@@ -51,14 +51,10 @@ def create_contributions_data(json_data):
                     contributions_list.append(contrib_dict)
     return contributions_list
 
-def count_overall_contributions(json_data):
-    return len(create_contributions_data(json_data))
 
-
-
+# START
 with open("repos.json") as data_file:
     data = json.load(data_file)
-
 
 working_directory = os.getcwd()
 repos_path = os.path.join(working_directory, 'repos')
@@ -67,8 +63,9 @@ if not os.path.isdir(repos_path):
 
 get_newest_repos(data)
 
-contributions_count = count_overall_contributions(data)
 contrib_list = create_contributions_data(data)
+
+print ("\nTotal contributions: ", len(contrib_list))
 
 #jinja_env = Environment(loader = FileSystemLoader(working_directory + '/templates'))
 #template = jinja_env.get_template('t.html')
@@ -78,10 +75,9 @@ template = Template(template_file.read())
 output = template.render(contributions=contrib_list)
 template_file.close()
 
-print(output)
+#print(output)
 
 output_file = open('output.html','w')
 output_file.write(output)
 output_file.close()
-
-print ("\nTotal contributions: ", contributions_count)
+print ("HTML file written to: output.html")
