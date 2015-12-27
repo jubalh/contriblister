@@ -9,8 +9,8 @@ from jinja2 import Environment, FileSystemLoader, Template
 
 #Contribution = namedtuple('Contribution', ['email', 'insertions', 'deletions'])
 
-def get_newest_repos():
-    for repo in data["repos"]:
+def get_newest_repos(json_data):
+    for repo in json_data["repos"]:
         sh.cd(repos_path)
         current_repo_path = os.path.join(repos_path, repo["name"])
 
@@ -35,16 +35,16 @@ def search_occurence_in_string(buf, searchterm, pos):
             return contribution_count
     return 0
 
-def count_overall_contributions():
+def count_overall_contributions(json_data):
     total_contributions = 0
-    for repo in data["repos"]:
+    for repo in json_data["repos"]:
         print ("Processing: ", repo["name"])
         wd = repos_path + "/" + repo["name"]
 
         output = subprocess.check_output(['git', 'log', '--pretty=format:"%ae - %s"', "--shortstat"], cwd=wd)
         output = output.decode("utf-8")
 
-        for ea in data["emails"]:
+        for ea in json_data["emails"]:
             print (" Checking for: " + ea)
             contributions = search_occurence_in_string(output, ea, 0)
             print (" %d contributions found" %contributions)
@@ -60,9 +60,9 @@ repos_path = os.path.join(working_directory, 'repos')
 if not os.path.isdir(repos_path):
     os.mkdir(repos_path)
 
-get_newest_repos()
+get_newest_repos(data)
 
-contributions_count = count_overall_contributions()
+contributions_count = count_overall_contributions(data)
 
 #jinja_env = Environment(loader = FileSystemLoader(working_directory + '/templates'))
 #template = jinja_env.get_template('t.html')
