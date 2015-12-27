@@ -24,16 +24,6 @@ def get_newest_repos(json_data):
     sh.cd(working_directory)
     print ("")
 
-def search_occurence_in_string(buf, searchterm, pos):
-    contribution_count = 0
-    pos = buf.find(searchterm, pos)
-    if pos >= 0:
-        pos2 = buf.find(" ", pos)
-        if pos2 >= 0:
-            contribution_count += 1
-            contribution_count += search_occurence_in_string(buf, searchterm, pos2)
-            return contribution_count
-    return 0
 
 def count_overall_contributions(json_data):
     total_contributions = 0
@@ -46,7 +36,7 @@ def count_overall_contributions(json_data):
 
         for ea in json_data["emails"]:
             print (" Checking for: " + ea)
-            contributions = search_occurence_in_string(output, ea, 0)
+            contributions = str.count(output, ea)
             print (" %d contributions found" %contributions)
             total_contributions += contributions
     return total_contributions
