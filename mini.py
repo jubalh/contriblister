@@ -4,10 +4,7 @@ import os
 import json
 import sh
 import subprocess
-#from collections import namedtuple
 from jinja2 import Environment, FileSystemLoader, Template
-
-#Contribution = namedtuple('Contribution', ['email', 'insertions', 'deletions'])
 
 def get_newest_repos(json_data):
     for repo in json_data["repos"]:
@@ -24,22 +21,40 @@ def get_newest_repos(json_data):
     sh.cd(working_directory)
     print ("")
 
-
-def count_overall_contributions(json_data):
+def create_contributions_data(json_data):
     total_contributions = 0
+    contributions_list = []
+    contrib_dict = {}
+
     for repo in json_data["repos"]:
         print ("Processing: ", repo["name"])
         wd = repos_path + "/" + repo["name"]
 
-        output = subprocess.check_output(['git', 'log', '--pretty=format:"%ae - %s"', "--shortstat"], cwd=wd)
-        output = output.decode("utf-8")
-
         for ea in json_data["emails"]:
             print (" Checking for: " + ea)
-            contributions = str.count(output, ea)
-            print (" %d contributions found" %contributions)
-            total_contributions += contributions
-    return total_contributions
+
+            output = subprocess.check_output(['git', 'log', '--pretty=format:"%ae%n%s"', "--shortstat", "--author=" + ea], cwd=wd)
+            output = output.decode("utf-8")
+
+            if len(output) > 0:
+                commits = output.split("\n\n")
+
+                print (" %d contributions found" %len(commits))
+
+                for commit in commits:
+                    lines = commit.splitlines()
+                    contrib_dict = {
+                        "email": ea,
+                        "repo": repo["name"],
+                        "summary": lines[1]
+                    }
+                    contributions_list.append(contrib_dict)
+    return contributions_list
+
+def count_overall_contributions(json_data):
+    return len(create_contributions_data(json_data))
+
+
 
 with open("repos.json") as data_file:
     data = json.load(data_file)
@@ -53,13 +68,16 @@ if not os.path.isdir(repos_path):
 get_newest_repos(data)
 
 contributions_count = count_overall_contributions(data)
+contrib_list = create_contributions_data(data)
 
 #jinja_env = Environment(loader = FileSystemLoader(working_directory + '/templates'))
 #template = jinja_env.get_template('t.html')
-template_file = open(os.path.join(working_directory, 'templates', 't.html'))
+
+template_file = open(os.path.join(working_directory, 'templates', 't2.html'))
 template = Template(template_file.read())
-output = template.render(a_var=contributions_count)
+output = template.render(contributions=contrib_list)
 template_file.close()
+
 print(output)
 
 output_file = open('output.html','w')
