@@ -66,8 +66,10 @@ contributions_count = count_overall_contributions()
 
 #jinja_env = Environment(loader = FileSystemLoader(working_directory + '/templates'))
 #template = jinja_env.get_template('t.html')
-template = Template(open(os.path.join(working_directory, 'templates', 't.html')).read())
+template_file = open(os.path.join(working_directory, 'templates', 't.html'))
+template = Template(template_file.read())
 output = template.render(a_var=contributions_count)
+template_file.close()
 print(output)
 
 output_file = open('output.html','w')
